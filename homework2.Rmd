@@ -107,14 +107,17 @@ race_data <- mass_shootings %>%
   ggplot(aes(x = race, y = n)) +
   geom_bar(stat = "identity",
            fill = "darkblue"
-  ) + '
+  ) + 
  geom_text(
-  aes(label = n, x = n - .1)
-   # colour ="white", size = 5
+  aes(label = n),
+   colour ="orange", 
+   size = 6,
+   hjust = 0
  ) +
-  labs(title = "Mass shootings by race",
-       x = "Race",
-       y = "Number of mass shootings") 
+  labs(
+     title = "Mass shootings by race",
+     x = "Race",
+     y = "Number of mass shootings") 
 
 race_data
 
@@ -126,10 +129,7 @@ race_data
 
 boxplot_data <- mass_shootings %>% 
   group_by(location_type) %>%
-  select(location_type, total_victims) %>% 
-  #I filter for total_victims <= 400, due to one extreme outlier which skews the data visualisation
-  filter(total_victims <= 400) %>% 
-  #mutate(location_type = fct_reorder(location_type, -total_victims)) 
+  select(location_type, total_victims) 
 
 ggplot(boxplot_data) + aes(location_type, total_victims) +
   geom_boxplot() +
@@ -142,6 +142,17 @@ ggplot(boxplot_data) + aes(location_type, total_victims) +
 
 ```{r}
 
+boxplot_data <- mass_shootings %>% 
+  group_by(location_type) %>%
+  select(location_type, total_victims) %>% 
+  #I filter for total_victims <= 400, due to one extreme outlier which skews the data visualisation
+  filter(total_victims <= 400) #%>% 
+  #mutate(location_type = fct_reorder(location_type, -total_victims)) 
+
+ggplot(boxplot_data) + aes(location_type, total_victims) +
+  geom_boxplot() +
+  labs(Title = "Total Victims by Location", x = "Location", y = "Total Victims")
+
 ```
 
 ### More open-ended questions
@@ -152,11 +163,26 @@ Address the following questions. Generate appropriate figures/tables to support 
 
 ```{r}
 
+mass_shootings %>% 
+  filter(race == "White", male == "TRUE", year >= 2000, prior_mental_illness == "Yes") %>% 
+  count()
+
+
 ```
 
 -   Which month of the year has the most mass shootings? Generate a bar chart sorted in chronological (natural) order (Jan-Feb-Mar- etc) to provide evidence of your answer.
 
 ```{r}
+ordered_months <- c("Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+mass_shootings %>%
+  group_by(month) %>% 
+  count() %>%
+  arrange(month, ordered_months)
+  
+  
+
 
 ```
 
