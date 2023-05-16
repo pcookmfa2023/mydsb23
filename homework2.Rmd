@@ -76,13 +76,46 @@ per_year <- mass_shootings %>%
   group_by(year) %>% 
   count()
 
-ggplot(data = per_year, aes(year, n)) + geom_line()
+ggplot(data = per_year, aes(year, n)) + 
+  geom_line(
+  colour = "#5989e3",
+  alpha = .9,
+  size = 1
+  ) +
+  geom_smooth(
+    method = "lm",
+    se = FALSE, 
+    colour = "black"
+  ) +
+  labs(
+    Title = "Graph",
+    x = "Year",
+    y = "Number of mass shootings"
+  )
 
 ```
 
 -   Generate a bar chart that identifies the number of mass shooters associated with each race category. The bars should be sorted from highest to lowest and each bar should show its number.
 
 ```{r}
+
+race_data <- mass_shootings %>%
+  na.omit(race) %>%
+  #Nikita says there are different types of ways to remove NAs, it is important to get the correct one
+  group_by(race) %>% 
+  count() %>% 
+  #arrange(desc(n))
+  mutate(race_reordered = fct_reorder(race, n))
+
+
+ggplot(race_data) +
+  aes(x = race, y = n) +
+  geom_bar(stat = "identity",
+           fill = "darkblue"
+  ) +
+  labs(title = "Mass shootings by race",
+       x = "Race",
+       y = "Number of mass shootings")
 
 ```
 
