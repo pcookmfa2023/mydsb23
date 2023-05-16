@@ -102,26 +102,39 @@ ggplot(data = per_year, aes(year, n)) +
 race_data <- mass_shootings %>%
   na.omit(race) %>%
   #Nikita says there are different types of ways to remove NAs, it is important to get the correct one
-  group_by(race) %>% 
-  count() %>% 
-  #arrange(desc(n))
-  mutate(race_reordered = fct_reorder(race, n))
-
-
-ggplot(race_data) +
-  aes(x = race, y = n) +
+  count(race) %>% 
+  mutate(race = fct_reorder(race, -n)) %>% 
+  ggplot(aes(x = race, y = n)) +
   geom_bar(stat = "identity",
            fill = "darkblue"
-  ) +
+  ) + '
+ geom_text(
+  aes(label = n, x = n - .1)
+   # colour ="white", size = 5
+ ) +
   labs(title = "Mass shootings by race",
        x = "Race",
-       y = "Number of mass shootings")
+       y = "Number of mass shootings") 
+
+race_data
 
 ```
 
 -   Generate a boxplot visualizing the number of total victims, by type of location.
 
 ```{r}
+
+boxplot_data <- mass_shootings %>% 
+  group_by(location_type) %>%
+  select(location_type, total_victims) %>% 
+  #I filter for total_victims <= 400, due to one extreme outlier which skews the data visualisation
+  filter(total_victims <= 400) %>% 
+  #mutate(location_type = fct_reorder(location_type, -total_victims)) 
+
+ggplot(boxplot_data) + aes(location_type, total_victims) +
+  geom_boxplot() +
+  labs(Title = "Total Victims by Location", x = "Location", y = "Total Victims")
+  
 
 ```
 
