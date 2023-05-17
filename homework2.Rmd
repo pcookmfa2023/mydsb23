@@ -105,16 +105,17 @@ race_data <- mass_shootings %>%
   count(race) %>% 
   mutate(race = fct_reorder(race, -n)) %>% 
   ggplot(aes(x = race, y = n)) +
-  geom_bar(stat = "identity",
-           fill = "darkblue"
+  geom_bar(
+    stat = "identity",
+    fill = "darkblue"
   ) + 
- geom_text(
-  aes(label = n),
-   colour ="orange", 
-   size = 6,
-   hjust = 0
- ) +
-  labs(
+  geom_text(
+    aes(label = n),
+    colour ="orange", 
+    size = 6,
+    hjust = 0
+  ) +
+    labs(
      title = "Mass shootings by race",
      x = "Race",
      y = "Number of mass shootings") 
@@ -176,11 +177,35 @@ mass_shootings %>%
 ordered_months <- c("Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 
-mass_shootings %>%
+mass_shootings <- mass_shootings %>%
   group_by(month) %>% 
-  count() %>%
-  arrange(month, ordered_months)
+  count() #%>%
+  #mutate(month = factor(month, levels = month.abb) %>% 
+  #arrange(month)
   
+  
+  
+  #arrange(mdy(mass_shootings$month))
+  
+  
+  
+  #arrange(month)
+  
+  #arrange(.dots = ordered_months)
+  
+
+
+ggplot(mass_shootings) +
+  aes(month, n) +
+  geom_bar(
+    stat = "identity",
+    fill = "pink"
+  ) +
+  labs(
+    title = "Mass shootings by month",
+    x = "Month",
+    y = "Number of mass shootings"
+  )
   
 
 
