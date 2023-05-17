@@ -246,6 +246,8 @@ mass_shootings_black_white %>%
   count()
 mass_shootings_latino_white %>% 
   count()
+
+#It is worth noting that since there are a significant number of NA values for Race, the results here may not truly represent the reality
 ```
 
 ### Very open-ended
@@ -253,6 +255,18 @@ mass_shootings_latino_white %>%
 -   Are mass shootings with shooters suffering from mental illness different from mass shootings with no signs of mental illness in the shooter?
 
 ```{r}
+mental_illness_effect <- mass_shootings %>% 
+  group_by(prior_mental_illness) %>% 
+  mutate(prior_mental_illness = na_if(prior_mental_illness, NA) %>% replace_na("Unknown"))
+
+ggplot(mental_illness_effect) +
+  aes(prior_mental_illness, fatalities) +
+  geom_bar(
+    stat = "identity",
+    fill = "blue"
+  )
+
+
 
 ```
 
