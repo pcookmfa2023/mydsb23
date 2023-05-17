@@ -177,7 +177,7 @@ mass_shootings %>%
 ordered_months <- c("Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 
-mass_shootings <- mass_shootings %>%
+mass_shootings_by_month <- mass_shootings %>%
   group_by(month) %>% 
   count() #%>%
   #mutate(month = factor(month, levels = month.abb) %>% 
@@ -195,7 +195,7 @@ mass_shootings <- mass_shootings %>%
   
 
 
-ggplot(mass_shootings) +
+ggplot(mass_shootings_by_month) +
   aes(month, n) +
   geom_bar(
     stat = "identity",
@@ -214,7 +214,38 @@ ggplot(mass_shootings) +
 -   How does the distribution of mass shooting fatalities differ between White and Black shooters? What about White and Latino shooters?
 
 ```{r}
+#First I clean the data to remove any NA values, select only data about race and fatalities and ensure that race is only white and black, we also group by race
+mass_shootings_black_white <- mass_shootings %>% 
+  filter(race %in% c("White", "Black")) %>%
+  select(race, fatalities) %>% 
+  group_by(race) %>%
+  na.omit(fatalities, race)
+  
+#I created a boxplot diagram to show the distribution
+ggplot(mass_shootings_black_white) + aes(race, fatalities) +
+  geom_boxplot() +
+  labs(Title = "Distribution of mass shooting fatalities by race", x = "Race", y = "Total Victims")
 
+#Here, I repeated the above but for the white and latino mass shooting suspects
+mass_shootings_latino_white <- mass_shootings %>% 
+  filter(race %in% c("White", "Latino")) %>%
+  select(race, fatalities) %>%
+  group_by(race) %>%
+  na.omit(fatalities, race)
+  
+ggplot(mass_shootings_latino_white) + aes(race, fatalities) +
+  geom_boxplot() +
+  labs(Title = "Distribution of mass shooting fatalities by race", x = "Race", y = "Total Victims")
+
+#I wanted some summary statistics as well to see the numerical values that were displayed on my diagram
+summary(mass_shootings_black_white)
+summary(mass_shootings_latino_white)
+
+#Finally, out of interest, I wanted to see how many mass shootings there were by shooters of each race
+mass_shootings_black_white %>% 
+  count()
+mass_shootings_latino_white %>% 
+  count()
 ```
 
 ### Very open-ended
