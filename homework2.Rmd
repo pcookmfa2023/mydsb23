@@ -26,6 +26,10 @@ library(wbstats)
 library(skimr)
 library(countrycode)
 library(here)
+
+
+install.packages(c("psych","GPArotation"),dependencies=TRUE)
+library(psych)
 ```
 
 # Data Visualisation - Exploration
@@ -254,25 +258,47 @@ mass_shootings_latino_white %>%
 
 -   Are mass shootings with shooters suffering from mental illness different from mass shootings with no signs of mental illness in the shooter?
 
-```{r}
+```{r} 
+
+
+
 mental_illness_effect <- mass_shootings %>% 
   group_by(prior_mental_illness) %>% 
-  mutate(prior_mental_illness = na_if(prior_mental_illness, NA) %>% replace_na("Unknown"))
+  mutate(prior_mental_illness = na_if(prior_mental_illness, NA) %>% replace_na("Unknown")) %>% 
+  filter(prior_mental_illness %in% c("Yes", "No")) %>% 
+  select(prior_mental_illness, fatalities)
 
 ggplot(mental_illness_effect) +
   aes(prior_mental_illness, fatalities) +
   geom_bar(
     stat = "identity",
     fill = "blue"
+  ) +
+  labs(
+    title = "Fatalities by mental illness status",
+    x = "Prior Mental Illness",
+    y = "Fatalities"
   )
 
+mental_illness_effect %>% 
+  pivot_wider(names_from = "prior_mental_illness", values_from = "fatalities")
+#mental_illness_effect %>% 
+#describeBy(fatalities, prior_mental_illness)
 
+
+#mental_illness_effect %>% 
+ #cor(fatalities, as.numeric(prior_mental_illness))
+
+  #as.numeric(mental_illness_effect)
 
 ```
 
 -   Assess the relationship between mental illness and total victims, mental illness and location type, and the intersection of all three variables.
 
 ```{r}
+
+
+
 
 ```
 
