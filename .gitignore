@@ -2,8 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-<<<<<<< HEAD
-=======
-/data/cdc-covid-geography
 data/cdc-covid-geography
->>>>>>> ce45341 (test)
+data/card_fraud.csv
