@@ -107,7 +107,19 @@ bechdel_test <- testing(data_split)
 
 Check the counts and % (proportions) of the `test` variable in each set.
 ```{r}
+bechdel_train %>% 
+  mutate(total = n()) %>% 
+  group_by(test) %>% 
+  summarise(number = n()) %>% 
+  mutate(percent = number/sum(number)*100)
 
+bechdel_test %>% 
+  mutate(total = n()) %>% 
+  group_by(test) %>% 
+  summarise(number = n()) %>% 
+  mutate(percent = number/sum(number)*100)
+
+#The proportions of the test variable are very very similar, as we would expect as this is the variable that we stratified by
 ```
 
 ## Feature exploration
@@ -131,6 +143,8 @@ bechdel %>%
   theme(legend.position = "none")+
   labs(x=NULL,y = NULL)
 
+
+#Interestingly, we can see that films that failed the Bechdel test tended to have a higher budget, tended to gross more money both domestically and internationally and tended to achieve a higher IMDB rating and metascore
 ```
 
 ## Scatterplot - Correlation Matrix
@@ -141,6 +155,12 @@ bechdel %>%
   select(test, budget_2013, domgross_2013, intgross_2013, imdb_rating, metascore)%>% 
   ggpairs(aes(colour=test), alpha=0.2)+
   theme_bw()
+
+#We can see from this plot a large range of correlations and distributions. Firstly there are some that are expected, especially that there are positive correlations between the variables regarding rating (imdb and metascore) and the variables considering how much the film grossed (domestic and international). For all 4 combinations, the correlation is more positive for films that failed the Bechdel test, the relationship between a film's rating and it's revenue is stronger for film's that fail the Bechdel test. This is interesting because it is not immediately obvious why this should be the case
+
+#We can also see a very strong correlation (0.737), between the IMDB rating and metascore rating for a film, this makes sense as critics and viewers are likely to generally have similar opinions about how good a film is. This relationship is essentially the same for films that failed and passed the Bechdel test.
+
+#There are a few outliers for films that grossed significantly more than other films, despite not necessarily having a higher rating (these were not the highest rated films). One film that failed the Bechdel test had a an extremely high budget compared to other films
 ```
 
 
@@ -158,6 +178,10 @@ bechdel %>%
   group_by(rated, test) %>%
   summarise(n = n()) %>% 
   mutate(prop = n/sum(n))
+
+#The first table shows the proportion of films from each genre that passed or failed the Bechdel test. For all films apart from Comedy, the majority failed the Bechdel test (for comedy 57.3% passed the test). The genre with the biggest proportion failing the test was Action, with 70.1% failing the test.
+
+#The second table shows the porportion of films from each rating that passed or failed the Bechdel test. For all ratings, the majority failed the test. The proportion that failed the test was highest for NC-17 films (83.3%) (however, there were only 6 NC-17 films so this may not be fully representative, the next highest was G films with 61.5% failing the test), and lowest for PG-13 films (52.9%)
 ```
 
 # Train first models. `test ~ metascore + imdb_rating`
